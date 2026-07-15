@@ -18,7 +18,9 @@ app.secret_key = "super-secret-key-987"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sinav.db"
 db = SQLAlchemy(app)
 
-UPLOAD_FOLDER = os.path.join("static", "uploads")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -44,13 +46,15 @@ class ImagePrediction(db.Model):
         return f"<ImagePrediction {self.tahmin_sinifi}>"
 
 
-interpreter = tflite.Interpreter(model_path="model/model.tflite")
+model_path = os.path.join(BASE_DIR, "model", "model.tflite")
+interpreter = tflite.Interpreter(model_path=model_path)
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
+labels_path = os.path.join(BASE_DIR, "model", "labels.txt")
 sinif_isimleri = []
-with open("model/labels.txt", "r", encoding="utf-8") as f:
+with open(labels_path, "r", encoding="utf-8") as f:
     for satir in f:
         satir = satir.strip()
         if satir:
