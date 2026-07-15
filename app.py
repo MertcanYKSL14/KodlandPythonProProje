@@ -4,8 +4,12 @@ from datetime import datetime
 from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from PIL import Image, ImageOps
-from tensorflow.keras.models import load_model
 from werkzeug.utils import secure_filename
+
+try:
+    import tflite_runtime.interpreter as tflite
+except ImportError:
+    import tensorflow.lite as tflite
 
 from questions import sorular
 
@@ -40,7 +44,10 @@ class ImagePrediction(db.Model):
         return f"<ImagePrediction {self.tahmin_sinifi}>"
 
 
-goruntu_modeli = load_model("model/keras_model.h5", compile=False)
+interpreter = tflite.Interpreter(model_path="model/model.tflite")
+interpreter.allocate_tensors()
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
 sinif_isimleri = []
 with open("model/labels.txt", "r", encoding="utf-8") as f:
@@ -53,17 +60,19 @@ with open("model/labels.txt", "r", encoding="utf-8") as f:
 
 
 def gorseli_tahmin_et(dosya_yolu):
-    veri = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     resim = Image.open(dosya_yolu).convert("RGB")
     resim = ImageOps.fit(resim, (224, 224), Image.Resampling.LANCZOS)
-    resim_dizisi = np.asarray(resim)
-    normalize_resim = (resim_dizisi.astype(np.float32) / 127.5) - 1
-    veri[0] = normalize_resim
+    resim_dizisi = np.asarray(resim, dtype=np.float32)
+    normalize_resim = (resim_dizisi / 127.5) - 1.0
+    input_data = np.expand_dims(normalize_resim, axis=0)
 
-    tahmin = goruntu_modeli.predict(veri)
-    index = int(np.argmax(tahmin))
+    interpreter.set_tensor(input_details[0]['index'], input_data)
+    interpreter.invoke()
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+
+    index = int(np.argmax(output_data[0]))
     sinif_adi = sinif_isimleri[index]
-    guven = float(tahmin[0][index])
+    guven = float(output_data[0][index])
     return sinif_adi, guven
 
 
