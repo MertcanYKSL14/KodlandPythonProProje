@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Sınav Sonucu - Python Pro Sınavı{% endblock %}
+
+{% block content %}
+    <div class="card" style="text-align: center;">
+        <h1>Sınav Sonucu</h1>
+        <p>Sınavı başarıyla tamamladınız! Skor detaylarınız aşağıda gösterilmiştir.</p>
+        
+        <div class="score-circle-wrapper">
+            <div class="score-circle" style="--score-percentage: {{ skor }};">
+                <div class="score-circle-text">%{{ skor }}</div>
+            </div>
+        </div>
+
+        <div class="results-summary">
+            <div class="summary-item">
+                <div class="label">Kişisel Yüksek Skorunuz</div>
+                <div class="value personal">%{{ kisisel_en_yuksek if kisisel_en_yuksek is not none else 0 }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Genel Yüksek Skor (Tüm Adaylar)</div>
+                <div class="value global">%{{ genel_en_yuksek if genel_en_yuksek is not none else 0 }}</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+            <a href="/sinav" class="btn btn-primary">Sınavı Yeniden Dene</a>
+            <a href="/" class="btn btn-secondary" style="margin-left: 12px;">Anasayfaya Dön</a>
+        </div>
+    </div>
+{% endblock %}

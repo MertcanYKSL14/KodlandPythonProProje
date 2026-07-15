@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Görsel Sınıflandırma - Python Pro Sınavı{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>Görsel Tanıma & Sınıflandırma</h1>
+        <p>Teachable Machine modelimizi kullanarak bir görsel yükleyip sınıflandırabilirsiniz. Sistemimiz görselde maske takılıp takılmadığını otomatik olarak analiz eder ve sonucu kaydeder.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="upload-container">
+                <div class="upload-zone" id="uploadZone">
+                    <span class="upload-icon">📸</span>
+                    <span class="upload-text" id="uploadText">Tıklayın veya Görseli Buraya Sürükleyin</span>
+                    <span class="upload-hint">PNG, JPG, JPEG formatları (224x224 boyutuna otomatik ölçeklenir)</span>
+                    <input type="file" name="gorsel" accept="image/*" required onchange="updateFileName(this)">
+                </div>
+                <button type="submit" class="btn btn-primary">Görseli Analiz Et</button>
+            </div>
+        </form>
+
+        {% if sonuc %}
+            <div class="result-card">
+                <h2>Analiz Sonucu</h2>
+
+                <div class="result-image-wrapper">
+                    <img src="{{ url_for('static', filename='uploads/' + sonuc.dosya_adi) }}" class="result-image" alt="Yüklenen Görsel">
+                </div>
+                <div class="result-info">
+                    <p>Tahmin Edilen Sınıf: <strong>{{ sonuc.sinif_adi }}</strong></p>
+                    <p>Güven Skoru: <strong>%{{ sonuc.guven }}</strong></p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function updateFileName(input) {
+            const fileName = input.files[0] ? input.files[0].name : "Tıklayın veya Görseli Buraya Sürükleyin";
+            document.getElementById('uploadText').innerText = fileName;
+            document.getElementById('uploadZone').style.borderColor = 'var(--success)';
+        }
+    </script>
+{% endblock %}

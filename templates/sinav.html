@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Sınav - Python Pro Sınavı{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>Python Pro Sınavı</h1>
+        <p>Lütfen adınızı girin ve aşağıdaki çoktan seçmeli soruları yanıtlayın. Tüm soruları yanıtladıktan sonra "Gönder" butonuna tıklayarak sonuçlarınızı görebilirsiniz.</p>
+
+        <form method="POST" action="/sinav">
+            <div class="form-group">
+                <label for="isim" class="form-label">Adınız Soyadınız:</label>
+                <input type="text" id="isim" name="isim" class="form-control" placeholder="Adınızı girin..." value="{{ session.get('isim', '') }}" required>
+            </div>
+
+            {% for soru in sorular %}
+                <fieldset>
+                    <legend>Soru {{ loop.index }}: {{ soru.metin }}</legend>
+                    <div class="options-list">
+                        {% for secenek in soru.secenekler %}
+                            <label class="option-label">
+                                <input type="radio" name="soru_{{ soru.id }}" value="{{ loop.index0 }}" required>
+                                <span>{{ secenek }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            {% endfor %}
+
+            <div style="text-align: center; margin-top: 32px;">
+                <button type="submit" class="btn btn-primary">Sınavı Gönder</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

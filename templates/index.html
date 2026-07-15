@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Anasayfa - Python Pro Sınavı{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>Python Pro Eğitmen Adayları Testi</h1>
+        <p>Merhaba! Bu sınav, Python programlama dili ile çeşitli alanlarda (bot geliştirme, web geliştirme, yapay zeka, bilgisayar görüşü ve doğal dil işleme) ileri seviye bilgi düzeyinizi ölçmek üzere tasarlanmıştır.</p>
+        
+        <h2>Sınav Konuları</h2>
+        <div class="subjects-grid">
+            <div class="subject-card">
+                <h3>🤖 Discord Bot</h3>
+                <p>Discord.py kütüphanesi kullanarak sohbet botu geliştirme ve otomasyon işlemleri.</p>
+            </div>
+            <div class="subject-card">
+                <h3>🌐 Web Geliştirme</h3>
+                <p>Flask web framework'ü, yönlendirmeler (routes) ve web uygulaması mimarisi.</p>
+            </div>
+            <div class="subject-card">
+                <h3>🧠 Yapay Zeka</h3>
+                <p>Makine öğrenmesi kavramları, kayıp fonksiyonları (loss), epoch ve temel terimler.</p>
+            </div>
+            <div class="subject-card">
+                <h3>👁️ Bilgisayar Görüşü</h3>
+                <p>Computer Vision mimarileri, CNN'ler ve TensorFlow/Keras ile görüntü işleme.</p>
+            </div>
+            <div class="subject-card">
+                <h3>💬 Doğal Dil İşleme</h3>
+                <p>NLP temelleri, BeautifulSoup ve NLTK kütüphaneleriyle metin işleme/ayrıştırma.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="/sinav" class="btn btn-primary">Sınava Başla</a>
+        </div>
+    </div>
+{% endblock %}

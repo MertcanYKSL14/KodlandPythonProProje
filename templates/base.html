@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Python Pro Sınavı{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <nav>
+                <a href="/" id="nav-home">Anasayfa</a>
+                <a href="/sinav" id="nav-sinav">Sınav</a>
+                <a href="/gorsel-tanima" id="nav-gorsel">Görsel Tanıma</a>
+            </nav>
+            <div class="skor-bilgisi">
+                {% if kisisel_en_yuksek is not none %}
+                    <span class="skor-badge kisisel">Kişisel Yüksek Skor: {{ kisisel_en_yuksek }}%</span>
+                {% endif %}
+                <span class="skor-badge genel">Genel Yüksek Skor: {{ genel_en_yuksek if genel_en_yuksek is not none else 0 }}%</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>Mertcan Yüksel tarafından geliştirildi. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            if (currentPath === '/') {
+                document.getElementById('nav-home')?.classList.add('active');
+            } else if (currentPath.startsWith('/sinav')) {
+                document.getElementById('nav-sinav')?.classList.add('active');
+            } else if (currentPath.startsWith('/gorsel-tanima')) {
+                document.getElementById('nav-gorsel')?.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
